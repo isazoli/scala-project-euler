@@ -1,4 +1,12 @@
 object Problem13 {
+
+val numsStr3 ="""123
+456
+789"""                                            //> numsStr3  : String = 123
+                                                  //| 456
+                                                  //| 789
+
+
   val numsStr = """37107287533902102798797998220837590246510135740250
 46376937677490009712648124896970078050417018260538
 74324986199524741059474233309513058123726617309629
@@ -167,18 +175,30 @@ object Problem13 {
    def func(x : Int, yz : (Int, Int)) : Int = x + yz._2
                                                   //> func: (x: Int, yz: (Int, Int))Int
    val sumPerPos = for {
-   		x <- gBy.values
-   		qqq = x.foldLeft(0)(func)
-   } yield (qqq)                                  //> sumPerPos  : Iterable[Int] = List(422, 486, 470, 441, 476, 436, 482, 427, 5
-                                                  //| 12, 452, 486, 425, 468, 392, 440, 487, 447, 410, 458, 446, 460, 453, 454, 5
-                                                  //| 03, 466, 409, 480, 484, 443, 506, 441, 422, 462, 426, 428, 464, 487, 453, 4
-                                                  //| 55, 474, 432, 394, 462, 449, 469, 419, 427, 478, 443, 454)
+   		x <- 0 to gBy.keySet.max
+   		val t = gBy.get(x)
+   		qqq = t.get.foldLeft(0)(func)
+   } yield (qqq)                                  //> sumPerPos  : scala.collection.immutable.IndexedSeq[Int] = Vector(422, 425, 
+                                                  //| 460, 462, 478, 486, 468, 441, 449, 410, 470, 455, 443, 458, 427, 454, 487, 
+                                                  //| 466, 464, 427, 512, 487, 409, 462, 476, 482, 394, 484, 392, 486, 419, 453, 
+                                                  //| 453, 447, 454, 426, 469, 436, 440, 422, 432, 446, 441, 474, 480, 503, 452, 
+                                                  //| 443, 428, 506)
    
    
-   var y = 0                                      //> y  : Int = 0
-   for {
-   	x <- sumPerPos
-   } yield (x % 10)                               //> res0: Iterable[Int] = List(2, 6, 0, 1, 6, 6, 2, 7, 2, 2, 6, 5, 8, 2, 0, 7, 
-                                                  //| 7, 0, 8, 6, 0, 3, 4, 3, 6, 9, 0, 4, 3, 6, 1, 2, 2, 6, 8, 4, 7, 3, 5, 4, 2, 
-                                                  //| 4, 2, 9, 9, 9, 7, 8, 3, 4)
+  
+  
+  def reqSum(remainder : Int, ns : Iterable[Int]) : String = {
+  	if (ns.isEmpty) {
+  		if (remainder > 0) remainder.toString else ""
+  	} else {
+  		var y = remainder + ns.head
+  		(y % 10).toString().concat(reqSum(y / 10, ns.tail))
+  	}
+  }                                               //> reqSum: (remainder: Int, ns: Iterable[Int])String
+  
+  val test1 = Array(18, 15,12)                    //> test1  : Array[Int] = Array(18, 15, 12)
+  
+  reqSum(0, test1)                                //> res0: String = 8631
+  
+  reqSum(0, sumPerPos).reverse                    //> res1: String = 5537376230390876637302048746832985971773659831892672
 }
